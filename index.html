@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CORNSTARS — Khorne on the Cob | Heartsteelers 2026 Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@400;600;700;900&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --flame-orange:   #E8560A;
+    --flame-yellow:   #F5A800;
+    --flame-bright:   #FFD040;
+    --corn-gold:      #D4A017;
+    --corn-yellow:    #F2C840;
+    --crimson-deep:   #7A0010;
+    --crimson:        #B01428;
+    --crimson-mid:    #8B1020;
+    --husk-green:     #3A6B1A;
+    --husk-bright:    #4E8C24;
+    --skull-cream:    #E8D9A0;
+    --parchment:      #F2E8C8;
+    --parchment2:     #D8C898;
+    --banner-bg:      #EEE0B0;
+    --dark:           #0A0000;
+    --darker:         #050000;
+    --gold-trim:      #C9840C;
+    --gold-bright:    #F0B030;
+  }
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--darker);
+    background-image:
+      radial-gradient(ellipse 100% 40% at 50% 0%,   rgba(232,86,10,0.2)  0%, transparent 70%),
+      radial-gradient(ellipse 60%  60% at 50% 0%,   rgba(245,168,0,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 40%  30% at 15% 100%, rgba(122,0,16,0.15)  0%, transparent 60%),
+      radial-gradient(ellipse 40%  30% at 85% 100%, rgba(122,0,16,0.15)  0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='0.8' fill='rgba(245,168,0,0.07)'/%3E%3C/svg%3E");
+    min-height: 100vh;
+    font-family: 'Cinzel', serif;
+    color: var(--parchment);
+    overflow-x: hidden;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+  }
+
+  /* ── FLAME HEADER ── */
+  .flame-header {
+    width: 100%;
+    background: linear-gradient(180deg, var(--crimson-deep) 0%, rgba(122,0,16,0.4) 80%, transparent 100%);
+    padding-top: 4px;
+    overflow: hidden;
+  }
+  .flames-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    height: 70px;
+    padding: 0 0.5rem;
+  }
+  .flame {
+    flex-shrink: 0;
+    position: relative;
+    animation: flicker var(--dur, 1.2s) ease-in-out infinite alternate;
+    animation-delay: var(--del, 0s);
+    transform-origin: bottom center;
+  }
+  .flame svg { display: block; }
+  @keyframes flicker {
+    0%   { transform: scaleY(1)    scaleX(1)    rotate(-2deg); opacity: 0.9; }
+    50%  { transform: scaleY(1.2)  scaleX(0.88) rotate(1deg);  opacity: 1;   }
+    100% { transform: scaleY(0.85) scaleX(1.1)  rotate(2deg);  opacity: 0.85;}
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 1.5rem 2rem 0.5rem;
+  }
+
+  .logo-wrap {
+    display: inline-block;
+    width: clamp(90px, 16vw, 150px);
+    margin-bottom: 1.2rem;
+    filter:
+      drop-shadow(0 0 30px rgba(232,86,10,0.7))
+      drop-shadow(0 0 60px rgba(245,168,0,0.4));
+    animation: logo-pulse 4s ease-in-out infinite;
+  }
+  .logo-wrap img { width: 100%; display: block; }
+  @keyframes logo-pulse {
+    0%,100% { filter: drop-shadow(0 0 30px rgba(232,86,10,0.7)) drop-shadow(0 0 60px rgba(245,168,0,0.4)); }
+    50%      { filter: drop-shadow(0 0 50px rgba(232,86,10,0.9)) drop-shadow(0 0 90px rgba(245,168,0,0.6)); }
+  }
+
+  /* Parchment banner ribbon — like the logo scroll */
+  .banner-ribbon {
+    display: inline-block;
+    position: relative;
+    background: linear-gradient(180deg, var(--banner-bg) 0%, var(--parchment2) 55%, #C0B078 100%);
+    padding: 0.55rem 5rem;
+    clip-path: polygon(3% 0%, 97% 0%, 100% 50%, 97% 100%, 3% 100%, 0% 50%);
+    box-shadow:
+      0 6px 25px rgba(0,0,0,0.85),
+      inset 0 1px 0 rgba(255,255,200,0.5),
+      inset 0 -2px 0 rgba(0,0,0,0.15);
+  }
+  .banner-ribbon::before,
+  .banner-ribbon::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2.5rem;
+    background: #A89060;
+  }
+  .banner-ribbon::before { left: 0;  clip-path: polygon(0 0, 100% 0, 55% 50%, 100% 100%, 0 100%); }
+  .banner-ribbon::after  { right: 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 45% 50%); }
+
+  .wordmark-text {
+    font-family: 'Cinzel Decorative', serif;
+    font-weight: 900;
+    font-size: clamp(2rem, 7vw, 5rem);
+    letter-spacing: 0.04em;
+    line-height: 1;
+    color: var(--crimson-deep);
+    text-shadow: 1px 1px 0 rgba(0,0,0,0.25), 0 0 20px rgba(232,86,10,0.15);
+    position: relative;
+    z-index: 1;
+  }
+  .wordmark-text .red { color: var(--crimson); }
+
+  .team-sub {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+    color: var(--flame-yellow);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 20px rgba(245,168,0,0.5), 0 2px 4px rgba(0,0,0,0.8);
+    margin-top: 1rem;
+    display: block;
+  }
+  .series-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.5em;
+    color: var(--parchment2);
+    opacity: 0.4;
+    margin-top: 0.35rem;
+    text-transform: uppercase;
+  }
+
+  /* ── ORNAMENT ── */
+  .ornament {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem auto;
+    max-width: 700px;
+    padding: 0 2rem;
+  }
+  .ornament-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-trim), var(--flame-orange), var(--gold-trim), transparent);
+  }
+  .ornament-icon {
+    font-size: 1.4rem;
+    color: var(--flame-orange);
+    filter: drop-shadow(0 0 8px rgba(232,86,10,0.9));
+    animation: skull-pulse 3s ease-in-out infinite;
+  }
+  @keyframes skull-pulse {
+    0%,100% { filter: drop-shadow(0 0 8px  rgba(232,86,10,0.8)); }
+    50%      { filter: drop-shadow(0 0 20px rgba(232,86,10,1)) drop-shadow(0 0 30px rgba(245,168,0,0.5)); }
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    padding: 0 2rem 2.5rem;
+  }
+  .filter-btn {
+    background: linear-gradient(180deg, rgba(122,0,16,0.6) 0%, rgba(60,0,8,0.8) 100%);
+    border: 1px solid var(--gold-trim);
+    color: var(--corn-yellow);
+    padding: 0.5rem 1.5rem;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    clip-path: polygon(8px 0%, calc(100% - 8px) 0%, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0% 50%);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: linear-gradient(180deg, var(--crimson) 0%, var(--crimson-deep) 100%);
+    border-color: var(--flame-yellow);
+    color: var(--flame-bright);
+    box-shadow: 0 0 20px rgba(232,86,10,0.5), 0 0 8px rgba(245,168,0,0.3);
+  }
+
+  /* ── ROSTER SECTION ── */
+  .roster-section {
+    padding: 0 3rem 6rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 3rem 2.5rem;
+    margin-bottom: 4rem;
+  }
+
+  /* ── CARD ── */
+  .card-scene {
+    perspective: 900px;
+    cursor: pointer;
+    opacity: 0;
+    animation: card-appear 0.6s ease forwards;
+  }
+  @keyframes card-appear {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card-scene:nth-child(1)  { animation-delay: 0.05s; }
+  .card-scene:nth-child(2)  { animation-delay: 0.10s; }
+  .card-scene:nth-child(3)  { animation-delay: 0.15s; }
+  .card-scene:nth-child(4)  { animation-delay: 0.20s; }
+  .card-scene:nth-child(5)  { animation-delay: 0.25s; }
+  .card-scene:nth-child(6)  { animation-delay: 0.30s; }
+  .card-scene:nth-child(7)  { animation-delay: 0.35s; }
+  .card-scene:nth-child(8)  { animation-delay: 0.40s; }
+  .card-scene:nth-child(9)  { animation-delay: 0.45s; }
+  .card-scene:nth-child(10) { animation-delay: 0.50s; }
+  .card-scene:nth-child(11) { animation-delay: 0.55s; }
+  .card-scene:nth-child(12) { animation-delay: 0.60s; }
+
+  .card-wrapper {
+    transform-style: preserve-3d;
+    transition: transform 0.08s linear, box-shadow 0.3s ease;
+    border-radius: 8px;
+  }
+
+  .card-image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid var(--gold-trim);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 20px 60px rgba(0,0,0,0.85),
+      0 0 25px rgba(122,0,16,0.35);
+  }
+  .card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+    border-radius: 6px;
+    pointer-events: none;
+    user-select: none;
+  }
+  .card-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255,200,80,0.22)  0%,
+      rgba(232,86,10,0.12)   35%,
+      rgba(176,20,40,0.08)   60%,
+      transparent            80%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .card-scene:hover .card-shine { opacity: 1; }
+  .card-scene:hover .card-image-wrap {
+    border-color: var(--flame-yellow);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.9),
+      0 30px 80px rgba(0,0,0,0.9),
+      0 0 40px rgba(232,86,10,0.45),
+      0 0 20px rgba(245,168,0,0.3);
+  }
+
+  .card-info {
+    padding: 0.8rem 0.2rem 0;
+    text-align: center;
+  }
+  .card-number {
+    font-size: 0.55rem;
+    letter-spacing: 0.3em;
+    color: var(--gold-trim);
+    margin-bottom: 0.2rem;
+  }
+  .card-name {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(0.65rem, 1.4vw, 0.85rem);
+    font-weight: 700;
+    color: var(--corn-yellow);
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    text-shadow: 0 0 15px rgba(212,160,23,0.5), 0 2px 4px rgba(0,0,0,0.9);
+  }
+  .card-position {
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    color: var(--flame-orange);
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+    text-shadow: 0 0 8px rgba(232,86,10,0.4);
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,0,0,0.94);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 2rem;
+    backdrop-filter: blur(8px);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-card {
+    position: relative;
+    max-width: 480px;
+    width: 100%;
+    perspective: 1200px;
+  }
+  .modal-card-inner {
+    transform-style: preserve-3d;
+    transition: transform 0.08s linear;
+  }
+  .modal-card-inner img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+    border: 3px solid var(--flame-yellow);
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.95),
+      0 30px 100px rgba(0,0,0,0.98),
+      0 0 70px rgba(232,86,10,0.4),
+      0 0 40px rgba(245,168,0,0.2);
+    pointer-events: none;
+    user-select: none;
+  }
+  .modal-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: radial-gradient(
+      circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255,200,80,0.25) 0%,
+      rgba(232,86,10,0.12)  35%,
+      transparent           70%
+    );
+    pointer-events: none;
+    mix-blend-mode: screen;
+  }
+  .modal-close {
+    position: absolute;
+    top: -14px; right: -14px;
+    width: 36px; height: 36px;
+    background: linear-gradient(180deg, var(--crimson) 0%, var(--crimson-deep) 100%);
+    border: 2px solid var(--gold-trim);
+    border-radius: 50%;
+    color: var(--corn-yellow);
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+  }
+  .modal-close:hover {
+    background: linear-gradient(180deg, var(--flame-orange) 0%, var(--crimson) 100%);
+    border-color: var(--flame-bright);
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 0 0 20px rgba(232,86,10,0.7);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid rgba(201,132,12,0.15);
+  }
+  .footer-logo { width: 48px; margin: 0 auto 0.75rem; opacity: 0.45; }
+  .footer-logo img { width: 100%; }
+  footer p { font-size: 0.5rem; letter-spacing: 0.35em; color: rgba(212,160,23,0.3); }
+
+  .card-scene.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="flame-header">
+  <div class="flames-row" id="flamesRow"></div>
+</div>
+
+<header>
+  <div class="logo-wrap">
+    <img src="Khorne_on_the_Cob.png" alt="Khorne on the Cob">
+  </div>
+  <div class="banner-ribbon">
+    <div class="wordmark-text"><span class="red">C</span>ORN<span class="red">S</span>TARS</div>
+  </div>
+  <span class="team-sub">Khorne on the Cob — Official Roster Cards</span>
+  <div class="series-label">Heartsteelers 2026 Series &nbsp;·&nbsp; Blood Bowl</div>
+</header>
+
+<div class="ornament">
+  <div class="ornament-line"></div>
+  <div class="ornament-icon">☠</div>
+  <div class="ornament-line"></div>
+</div>
+
+<div class="filter-bar">
+  <button class="filter-btn active" data-filter="all">All Players</button>
+  <button class="filter-btn" data-filter="lineman">Lineman</button>
+  <button class="filter-btn" data-filter="runner">Runner</button>
+  <button class="filter-btn" data-filter="blocker">Blocker</button>
+  <button class="filter-btn" data-filter="big-guy">Big Guy</button>
+</div>
+
+<main class="roster-section">
+  <div class="cards-grid" id="cardsGrid"></div>
+</main>
+
+<footer>
+  <div class="footer-logo"><img src="Khorne_on_the_Cob.png" alt=""></div>
+  <p>CORNSTARS &nbsp;·&nbsp; KHORNE ON THE COB &nbsp;·&nbsp; HEARTSTEELERS 2026 SERIES &nbsp;·&nbsp; OFFICIAL LICENSED PRODUCT &nbsp;·&nbsp; © GAMES WORKSHOP LTD.</p>
+</footer>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-card" id="modalCard">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-card-inner" id="modalCardInner">
+      <img id="modalImg" src="" alt="">
+      <div class="modal-shine" id="modalShine"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── FLAMES ──
+  const flamesRow = document.getElementById('flamesRow');
+  const count = Math.floor(window.innerWidth / 32) + 4;
+  for (let i = 0; i < count; i++) {
+    const dur  = (0.8 + Math.random() * 0.9).toFixed(2);
+    const del  = (Math.random() * 0.9).toFixed(2);
+    const h    = 28 + Math.floor(Math.random() * 34);
+    const w    = 22 + Math.floor(Math.random() * 16);
+    const warm = Math.random() > 0.4 ? '#E8560A' : '#F5A800';
+    const tip  = Math.random() > 0.4 ? '#FFD040' : '#FF8020';
+    const el   = document.createElement('div');
+    el.className = 'flame';
+    el.style.cssText = `--dur:${dur}s;--del:${del}s;height:${h}px;width:${w}px;`;
+    el.innerHTML = `<svg width="${w}" height="${h}" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs><linearGradient id="fg${i}" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0%" stop-color="${warm}"/>
+        <stop offset="55%" stop-color="${tip}"/>
+        <stop offset="100%" stop-color="#FFF8C0" stop-opacity="0.5"/>
+      </linearGradient></defs>
+      <path d="M15,38 C6,30 2,22 8,14 C10,10 9,5 12,2 C12,8 16,10 18,6 C22,12 24,18 22,24 C28,18 27,12 24,8 C30,14 30,24 24,30 C26,34 22,40 15,38Z" fill="url(#fg${i})" opacity="0.92"/>
+    </svg>`;
+    flamesRow.appendChild(el);
+  }
+
+  // ── PLAYERS ──
+  const players = [
+    { num:'01', name:'Boomer Shucksman',                  position:'Lineman', posClass:'lineman', file:'01_-_Boomer_Shucksman.png'                 },
+    { num:'02', name:'LeBron Grains',                     position:'Lineman', posClass:'lineman', file:'02_-_LeBron_Grains.png'                    },
+    { num:'03', name:'The Player Formally Known As Korn', position:'Lineman', posClass:'lineman', file:'03_-_The_Player_Formally_Known_As_Korn.png' },
+    { num:'04', name:'Creamer',                           position:'Lineman', posClass:'lineman', file:'04_-_Creamer.png'                           },
+    { num:'05', name:'Cob Stopper',                       position:'Lineman', posClass:'lineman', file:'05_-_Cob_Stopper.png'                       },
+    { num:'06', name:'Shuck Norris Jnr',                  position:'Runner',  posClass:'runner',  file:'06_-_Shuck_Norris_Jnr.png'                 },
+    { num:'07', name:'Cornelias Watt',                    position:'Runner',  posClass:'runner',  file:'07_-_Cornelias_Watt.png'                   },
+    { num:'08', name:'Cobby Bryant',                      position:'Blocker', posClass:'blocker', file:'08_-_Cobby_Bryant.png'                     },
+    { num:'09', name:'Justin Field-of-Dreams',            position:'Blocker', posClass:'blocker', file:'09_-_Justin_Field-of-Dreams.png'           },
+    { num:'10', name:'Jimmy Crack-Corn',                  position:'Blocker', posClass:'blocker', file:'10_-_Jimmy_Crack-Corn.png'                 },
+    { num:'11', name:'Colonel Husk',                      position:'Big Guy', posClass:'big-guy', file:'11_-_Colonel_Husk.png'                     },
+    { num:'12', name:'Hun Silo',                          position:'Blocker', posClass:'blocker', file:'12_-_Hun_Silo.png'                         },
+  ];
+
+  // ── BUILD CARDS ──
+  const grid = document.getElementById('cardsGrid');
+  players.forEach((p, i) => {
+    const scene = document.createElement('div');
+    scene.className = 'card-scene';
+    scene.dataset.pos = p.posClass;
+    scene.innerHTML = `
+      <div class="card-wrapper" data-index="${i}">
+        <div class="card-image-wrap">
+          <img src="${p.file}" alt="${p.name}" loading="lazy" draggable="false">
+          <div class="card-shine"></div>
+        </div>
+        <div class="card-info">
+          <div class="card-number">#${p.num}</div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-position">${p.position}</div>
+        </div>
+      </div>`;
+    grid.appendChild(scene);
+  });
+
+  // ── 3D TILT ──
+  document.querySelectorAll('.card-wrapper').forEach(wrapper => {
+    const shine = wrapper.querySelector('.card-shine');
+    wrapper.addEventListener('mousemove', e => {
+      const r = wrapper.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const cx = r.width/2, cy = r.height/2;
+      wrapper.style.transform = `rotateX(${-((y-cy)/cy)*18}deg) rotateY(${((x-cx)/cx)*18}deg) scale3d(1.04,1.04,1.04)`;
+      shine.style.setProperty('--mx', (x/r.width*100)+'%');
+      shine.style.setProperty('--my', (y/r.height*100)+'%');
+    });
+    wrapper.addEventListener('mouseleave', () => {
+      wrapper.style.transition = 'transform 0.5s ease';
+      wrapper.style.transform  = 'rotateX(0) rotateY(0) scale3d(1,1,1)';
+      setTimeout(() => { wrapper.style.transition = 'transform 0.08s linear'; }, 500);
+    });
+    wrapper.addEventListener('click', () => openModal(parseInt(wrapper.dataset.index)));
+  });
+
+  // ── FILTER ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.card-scene').forEach(s =>
+        s.classList.toggle('hidden', f !== 'all' && s.dataset.pos !== f));
+    });
+  });
+
+  // ── MODAL ──
+  const overlay    = document.getElementById('modalOverlay');
+  const modalInner = document.getElementById('modalCardInner');
+  const modalImg   = document.getElementById('modalImg');
+  const modalShine = document.getElementById('modalShine');
+
+  function openModal(idx) {
+    modalImg.src = players[idx].file;
+    modalImg.alt = players[idx].name;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    modalInner.style.transform = '';
+  }
+
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  overlay.addEventListener('mousemove', e => {
+    if (!overlay.classList.contains('open')) return;
+    const card = document.getElementById('modalCard');
+    const r = card.getBoundingClientRect();
+    const x = e.clientX - r.left, y = e.clientY - r.top;
+    if (x < -60 || x > r.width+60 || y < -60 || y > r.height+60) return;
+    const cx = r.width/2, cy = r.height/2;
+    modalInner.style.transform = `rotateX(${-((y-cy)/cy)*22}deg) rotateY(${((x-cx)/cx)*22}deg)`;
+    modalShine.style.setProperty('--mx', Math.max(0,Math.min(100,x/r.width*100))+'%');
+    modalShine.style.setProperty('--my', Math.max(0,Math.min(100,y/r.height*100))+'%');
+  });
+  overlay.addEventListener('mouseleave', () => {
+    modalInner.style.transition = 'transform 0.5s ease';
+    modalInner.style.transform  = 'rotateX(0) rotateY(0)';
+    setTimeout(() => { modalInner.style.transition = 'transform 0.08s linear'; }, 500);
+  });
+</script>
+</body>
+</html>
